@@ -52,7 +52,7 @@ export default function Signup() {
             </Form.Group>
             <Form.Group id="password-confirm" className="mb-3">
               <Form.Label>Password Confirmation</Form.Label>
-              <Form.Control type="password" ref={passwordConfirmRef} required />
+              <Form.Control type="password" ref={passwordConfirmRef} placeholder="Confirm password" required />
             </Form.Group>
             <Button variant="outline-primary" disabled={loading} className="w-100" type="submit">
               Sign Up

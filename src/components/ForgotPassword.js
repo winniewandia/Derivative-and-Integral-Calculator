@@ -40,9 +40,9 @@ export default function ForgotPassword() {
           {error && <Alert variant="danger">{error}</Alert>}
           {reason && <Alert variant="info">{reason}</Alert>}
           <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
+            <Form.Group id="email" className="mb-3">
               <Form.Label>Email</Form.Label>
-              <Form.Control type="email" ref={emailRef} required />
+              <Form.Control type="email" ref={emailRef} placeholder="Enter your email" required />
             </Form.Group>
             <Button variant="outline-primary" disabled={loading} className="w-100" type="submit">
               Reset Password
