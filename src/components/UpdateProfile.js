@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
-import { useAuth } from "../contexts/AuthContext"
+import { useAuthentication } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 
 export default function UpdateProfile() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const passwordConfirmRef = useRef()
-  const { currentUser, updatePassword, updateEmail } = useAuth()
+  const { user, updatePassword, updateEmail } = useAuthentication()
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const history = useHistory()
@@ -22,7 +22,7 @@ export default function UpdateProfile() {
     setLoading(true)
     setError("")
 
-    if (emailRef.current.value !== currentUser.email) {
+    if (emailRef.current.value !== user.email) {
       promises.push(updateEmail(emailRef.current.value))
     }
     if (passwordRef.current.value) {
@@ -54,7 +54,7 @@ export default function UpdateProfile() {
                 type="email"
                 ref={emailRef}
                 required
-                defaultValue={currentUser.email}
+                defaultValue={user.email}
               />
             </Form.Group>
             <Form.Group id="password">
