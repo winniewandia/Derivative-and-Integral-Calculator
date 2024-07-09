@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react"
-import { Form, Button, Card, Alert } from "react-bootstrap"
+import { Form, Button, Card, Alert, Container } from "react-bootstrap"
 import { useAuthentication } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
+import "../styles/Login.css"
 
 export default function Login() {
   const emailRef = useRef()
@@ -15,12 +16,19 @@ export default function Login() {
     e.preventDefault()
 
     try {
-      setError("")
       setLoading(true)
       await login(emailRef.current.value, passwordRef.current.value)
       history.push("/")
-    } catch {
-      setError("Failed to log in")
+    } catch(err) {
+      let errorMessage;
+      try {
+        const errorObj = JSON.parse(err.message);
+        errorMessage = errorObj.error && errorObj.error.message ? errorObj.error.message : "An unexpected error occurred";
+      } catch (parseError) {
+        // If parsing fails, use the original error message or a default message
+        errorMessage = err.message || "An unexpected error occurred";
+      }
+      setError(errorMessage);
     }
 
     setLoading(false)
@@ -28,6 +36,10 @@ export default function Login() {
 
   return (
     <>
+    <Container
+      className="d-flex align-items-center justify-content-center containerMinHeight"
+    >
+      <div className="w-100 containerDivMaxWidth">
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Log In</h2>
@@ -41,8 +53,8 @@ export default function Login() {
               <Form.Label>Password</Form.Label>
               <Form.Control type="password" ref={passwordRef} required />
             </Form.Group>
-            <Button disabled={loading} className="w-100" type="submit">
-              Log In
+            <Button variant="outline-primary" disabled={loading} className="w-100" type="submit">
+              Login
             </Button>
           </Form>
           <div className="w-100 text-center mt-3">
@@ -53,6 +65,8 @@ export default function Login() {
       <div className="w-100 text-center mt-2">
         Need an account? <Link to="/signup">Sign Up</Link>
       </div>
+      </div>
+      </Container>
     </>
   )
 }
