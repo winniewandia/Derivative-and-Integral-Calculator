@@ -12,9 +12,8 @@ export default function Navigation() {
             <img src="assets/appIcon.png" alt="appIcon" width="150" height="30" />
           </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link href="#derivative">Derivative</Nav.Link>
+            <Nav.Link href="#integral">Integral</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
