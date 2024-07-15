@@ -1,0 +1,28 @@
+.card-margin {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+
+}
+
+.card-flex-aside {
+    flex: 1;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.card-flex-middle {
+    flex: 2;
+    /* margin-left: 5px;
+    margin-right: 5px; */
+}
+
+.container-bg {
+    background-color: #F0F6F6;
+}
+
+/* .bsPrefix-custom {
+    background-color: #99F49E;
+} */

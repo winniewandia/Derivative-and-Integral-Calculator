@@ -6,7 +6,7 @@ import '../styles/Navigation.css'
 
 export default function Navigation() {
     return (
-        <Navbar bg="light" data-bs-theme="light" fixed="top">
+        <Navbar className="nav-margin-bottom nav-bg">
         <Container>
           <Navbar.Brand href="#home">
             <img src="assets/appIcon.png" alt="appIcon" width="150" height="30" />
