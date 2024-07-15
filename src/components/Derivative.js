@@ -34,16 +34,6 @@ export default function Derivative() {
     >
       <div className="w-100 d-flex flex-row align-items-start">
         <div className="d-flex flex-column card-flex-aside card-margin">
-        <h2 className="text-center mb-4">Profile</h2>
-
-        <Card style={{marginBottom: '20px'}}>
-        <Card.Body>
-          <strong>Email:</strong> {user.email}
-          <Link to="/update-profile" className="btn w-100 mt-3" style={{backgroundColor: '#99F49E', border: '#99F49E'}}>
-            Update Profile
-          </Link>
-        </Card.Body>
-      </Card>
       <h2 className="text-center mb-4">History</h2>
         <Card className="">
           <Card.Body>

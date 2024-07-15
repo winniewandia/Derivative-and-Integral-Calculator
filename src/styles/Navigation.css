@@ -1,7 +1,18 @@
+.active-tab {
+    color: #99F49E;
+}
+
+.logout-link {
+    color: red;
+}
 .nav-margin-bottom {
     padding-bottom: 30px;
 }
 
 .nav-bg {
     background-color: white;
+}
+
+.nav-font {
+    font-size: larger;
 }
