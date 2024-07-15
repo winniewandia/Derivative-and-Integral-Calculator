@@ -1,18 +1,30 @@
 import React, { useState } from "react"
-import { Card, Button, Alert, Container, Form } from "react-bootstrap"
+import { Card, Button, Alert, Form } from "react-bootstrap"
 import { useAuthentication } from "../contexts/AuthContext"
-import { Link, useHistory } from "react-router-dom"
+import { useHistory } from "react-router-dom"
 import Navigation from "./Navigation"
 import '../styles/Derivative.css'
 import Footer from "./Footer"
+import { collection, setDoc, doc } from "firebase/firestore"
+import { db, auth } from "../firebase"
 
 export default function Derivative() {
   const [variable, setVariable] = useState("");
   const [polynomial, setPolynomial] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("")
-  const { user, logout } = useAuthentication()
-  const history = useHistory()
+  const { records } = useAuthentication();
+
+  async function handleSubmit(){
+    
+    const fieldsTosave = {
+      uid: auth.currentUser.uid,
+      variable: variable,
+      polynomial: polynomial,
+      derivative: result,
+    };
+    await setDoc(doc(collection(db, 'calculator')), fieldsTosave)
+  };
 
   const handleCalculate = (e) => {
     e.preventDefault();
@@ -24,6 +36,7 @@ export default function Derivative() {
       setError(err.message);
       setResult("");
     }
+    handleSubmit();
   };
 
   const calculateDerivative = (poly, variable) => {
@@ -78,11 +91,25 @@ export default function Derivative() {
       <div className="w-100 d-flex flex-row align-items-start">
         <div className="d-flex flex-column card-flex-aside card-margin">
       <h2 className="text-center mb-4">History</h2>
-        <Card className="">
-          <Card.Body>
-            No history available
-          </Card.Body>
-        </Card>
+      {records ? (
+  records.map((record, index) => (
+    <Card key={index} style={{marginBottom: '20px'}}>
+      <Card.Body>
+        
+            <strong>Variable:</strong> {record.variable} <br />
+            <strong>Polynomial:</strong> {record.polynomial} <br />
+            <strong>Derivative:</strong> {record.derivative}
+        
+      </Card.Body>
+    </Card>
+  ))
+) : (
+  <Card style={{marginBottom: '20px'}}>
+    <Card.Body>
+      <p>No history to display</p>
+    </Card.Body>
+  </Card>
+)}
         </div>
         <div className="d-flex flex-column card-flex-middle card-margin">
         <Card style={{marginBottom: '20px'}}>
@@ -107,8 +134,13 @@ export default function Derivative() {
               onChange={(e) => setPolynomial(e.target.value)}
               required />
             </Form.Group>
-            <Button className="btn mt-3 w-100" type="submit" style={{backgroundColor: '#99F49E', border: '#99F49E', color: 'black'}}>
-              Derive
+            <Button
+            className="btn mt-3 w-100"
+            type="submit"
+            style={{backgroundColor: '#99F49E', border: '#99F49E', color: 'black'}}
+            // onClick={handleSubmit}
+            >
+              Differentiate
             </Button>
             {result && (
                     <Form.Group className="mb-3 text-center" style={{ paddingTop: '10px', fontSize: 'large' }}>

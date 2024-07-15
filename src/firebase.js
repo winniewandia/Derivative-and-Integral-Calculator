@@ -1,24 +1,32 @@
-import firebase from "firebase/app"
-import "firebase/auth"
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
 
-const app = firebase.initializeApp({
-  // apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  // authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  // databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  // projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  // storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  // messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  // appId: process.env.REACT_APP_FIREBASE_APP_ID
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
   apiKey: "AIzaSyAtE2lsba6emwY7GD-_BFlIYFFZbkjJlXk",
   authDomain: "derivative-calc-fc374.firebaseapp.com",
+  databaseURL: "https://derivative-calc-fc374.firebaseio.com",
   projectId: "derivative-calc-fc374",
   storageBucket: "derivative-calc-fc374.appspot.com",
   messagingSenderId: "117605142073",
   appId: "1:117605142073:web:71671b5e6e39160ed807e8",
   measurementId: "G-SC5B7P6SM1"
-})
+};
 
-export const auth = app.auth()
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+const analytics = getAnalytics(app);
+
+
 export default app
 
 // Import the functions you need from the SDKs you need

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react"
-import { auth } from "../firebase"
+import { auth, db } from "../firebase"
+import { collection, query, getDocs } from "firebase/firestore"
 
 const AuthenticationContext = React.createContext()
 
@@ -10,6 +11,7 @@ export function useAuthentication() {
 export function AuthenticationProvider({ children }) {
   const [user, setUser] = useState()
   const [loading, setLoading] = useState(true)
+  const [records, setRecords] = useState([])
 
   function signup(email, password) {
     return auth.createUserWithEmailAndPassword(email, password)
@@ -35,7 +37,27 @@ export function AuthenticationProvider({ children }) {
     return user.updatePassword(password)
   }
 
+  const getData = async () => {
+    const q = query(collection(db, "calculator"));
+    var records = [];
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const record = {
+        uid: doc.id,
+        derivative: doc.get("derivative"),
+        integral: doc.get("integral"),
+        polynomial: doc.get("polynomial"),
+        variable: doc.get("variable"),
+
+      };
+      records.push(record);
+    })
+    setRecords(records);
+  }
+
   useEffect(() => {
+    getData();
     const userDetails = auth.onAuthStateChanged(user => {
       setUser(user)
       setLoading(false)
@@ -51,7 +73,9 @@ export function AuthenticationProvider({ children }) {
     logout,
     resetPassword,
     updateEmail,
-    updatePassword
+    updatePassword,
+    getData,
+    records,
   }
 
   return (
