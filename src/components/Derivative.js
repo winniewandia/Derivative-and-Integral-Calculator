@@ -21,7 +21,6 @@ export default function Derivative() {
       uid: auth.currentUser.uid,
       variable: variable,
       polynomial: polynomial,
-      derivative: result,
     };
     await setDoc(doc(collection(db, 'calculator')), fieldsTosave)
   };
@@ -98,7 +97,7 @@ export default function Derivative() {
         
             <strong>Variable:</strong> {record.variable} <br />
             <strong>Polynomial:</strong> {record.polynomial} <br />
-            <strong>Derivative:</strong> {record.derivative}
+            <strong>Derivative:</strong> {calculateDerivative(record.polynomial, record.variable)}
         
       </Card.Body>
     </Card>

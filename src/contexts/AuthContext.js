@@ -45,8 +45,6 @@ export function AuthenticationProvider({ children }) {
     querySnapshot.forEach((doc) => {
       const record = {
         uid: doc.id,
-        derivative: doc.get("derivative"),
-        integral: doc.get("integral"),
         polynomial: doc.get("polynomial"),
         variable: doc.get("variable"),
 
