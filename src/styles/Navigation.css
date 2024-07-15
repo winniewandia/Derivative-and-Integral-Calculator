@@ -13,6 +13,11 @@
     background-color: white;
 }
 
+.nav-email {
+    font-size: small;
+    margin-top: 7px;
+}
+
 .nav-font {
     font-size: larger;
 }

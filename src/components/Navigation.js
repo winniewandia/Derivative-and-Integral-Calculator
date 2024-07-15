@@ -30,35 +30,35 @@ export default function Navigation() {
             <img src="assets/appIcon.png" alt="appIcon" width="150" height="30" />
           </Navbar.Brand>
           <Nav className="me-auto">
-            <NavLink
-            className="nav-link nav-font"
-            to="/update-profile"
-            activeStyle={{color: '#99F49E'}}
-            onMouseEnter={() => setHoveredLink('updateProfile')}
-            onMouseLeave={() => setHoveredLink('')}
-            style={hoveredLink === 'updateProfile' ? {textDecoration: 'underline'} : {}}
-            >
-              {user.email}
-            </NavLink>
             <NavLink to="/"
             exact
             className="nav-link nav-font"
-            activeStyle={{color: '#99F49E'}}
+            activeStyle={{color: '#1da1f2'}}
             onMouseEnter={() => setHoveredLink('derivative')}
             onMouseLeave={() => setHoveredLink('')}
             style={hoveredLink === 'derivative' ? {textDecoration: 'underline'} : {}}
             >
-              Derivative
+              <strong>Derivative</strong>
             </NavLink>
             <NavLink
             to="/integral"
             className="nav-link nav-font"
-            activeStyle={{color: '#99F49E'}}
+            activeStyle={{color: '#1da1f2'}}
             onMouseEnter={() => setHoveredLink('integral')}
             onMouseLeave={() => setHoveredLink('')}
             style={hoveredLink === 'integral' ? {textDecoration: 'underline'} : {}}
             >
-              Integral
+              <strong>Integral</strong>
+            </NavLink>
+            <NavLink
+            className="nav-link nav-email"
+            to="/update-profile"
+            activeStyle={{color: '#1da1f2'}}
+            onMouseEnter={() => setHoveredLink('updateProfile')}
+            onMouseLeave={() => setHoveredLink('')}
+            style={hoveredLink === 'updateProfile' ? {textDecoration: 'underline'} : {}}
+            >
+              <strong>{user.email}</strong>
             </NavLink>
             <NavLink
             to="/login"
@@ -69,7 +69,7 @@ export default function Navigation() {
             }}
             style={{color: 'red'}}
             >
-              Log Out
+              <strong>Log Out</strong>
             </NavLink>
           </Nav>
         </Container>

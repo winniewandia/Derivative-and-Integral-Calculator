@@ -4,27 +4,70 @@ import { useAuthentication } from "../contexts/AuthContext"
 import { Link, useHistory } from "react-router-dom"
 import Navigation from "./Navigation"
 import '../styles/Derivative.css'
+import Footer from "./Footer"
 
 export default function Derivative() {
-  const [calculate, setCalculate] = useState(false)
+  const [variable, setVariable] = useState("");
+  const [polynomial, setPolynomial] = useState("");
+  const [result, setResult] = useState("");
   const [error, setError] = useState("")
   const { user, logout } = useAuthentication()
   const history = useHistory()
 
-  async function handleLogout() {
-    setError("")
-
+  const handleCalculate = (e) => {
+    e.preventDefault();
     try {
-      await logout()
-      history.push("/login")
-    } catch {
-      setError("Failed to log out")
+      const derivative = calculateDerivative(polynomial, variable);
+      setResult(derivative);
+      setError("");
+    } catch (err) {
+      setError(err.message);
+      setResult("");
     }
-  }
+  };
 
-  const handleCalculate = () => {
-    setCalculate(true)
-  }
+  const calculateDerivative = (poly, variable) => {
+    const cleanedPolynomial = poly.replaceAll(' ', '');
+    const terms = cleanedPolynomial.split(/(?=[+-])/);
+    const derivativeTerms = terms.map((term) => {
+      const coefficientMatch = term.match(new RegExp(`([+-]?\\d*\\.?\\d*)${variable}?(\\^(\\d+))?`));
+      if (coefficientMatch) {
+        const coefficientStr = coefficientMatch[1];
+        const exponentStr = coefficientMatch[3];
+  
+        const coefficient = coefficientStr !== undefined && coefficientStr !== ""
+          ? parseFloat(coefficientStr)
+          : (term.startsWith('-') ? -1 : 1);
+        const exponent = exponentStr !== undefined ? parseInt(exponentStr) : (term.includes(variable) ? 1 : 0);
+  
+        if (exponent === 0) {
+          return ''; // Term is a constant, derivative is 0
+        } else {
+          const newCoefficient = coefficient * exponent;
+          const newExponent = exponent - 1;
+  
+          if (newExponent === 0) {
+            return `${newCoefficient}`;
+          } else {
+            return `${newCoefficient}${variable}${newExponent !== 1 ? '^' + newExponent : ''}`;
+          }
+        }
+      } else {
+        throw new Error('Invalid polynomial term');
+      }
+    }).filter(term => term !== '');
+  
+    if (derivativeTerms.length === 0) {
+      return '0';
+    }
+  
+    return derivativeTerms.join(' + ').replace(/\+\s*-/g, '- ').replace(/\s+/g, '');
+  };
+  
+  
+  
+  
+
 
   return (
     <>
@@ -44,30 +87,41 @@ export default function Derivative() {
         <div className="d-flex flex-column card-flex-middle card-margin">
         <Card style={{marginBottom: '20px'}}>
         <Card.Body>
+        {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleCalculate}>
             <Form.Group className="mb-3">
               <Form.Label>Enter Variable</Form.Label>
-              <Form.Control type="text" placeholder="Enter your variable" required />
+              <Form.Control
+              type="text"
+              placeholder="Enter your variable"
+              value={variable}
+              onChange={(e) => setVariable(e.target.value)}
+              required />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Enter Polynomial</Form.Label>
-              <Form.Control type="text" placeholder="Enter your polynomial" required />
+              <Form.Control
+              type="text"
+              placeholder="Enter your polynomial"
+              value={polynomial}
+              onChange={(e) => setPolynomial(e.target.value)}
+              required />
             </Form.Group>
             <Button className="btn mt-3 w-100" type="submit" style={{backgroundColor: '#99F49E', border: '#99F49E', color: 'black'}}>
               Derive
             </Button>
-            <Form.Group className="mb-3">
-              <Form.Label>Derivative of the polynomial is:</Form.Label>
-              <Form.Label>2x + 3</Form.Label>
-
-            </Form.Group>
+            {result && (
+                    <Form.Group className="mb-3 text-center" style={{ paddingTop: '10px', fontSize: 'large' }}>
+                      <Form.Label><strong>Ans:</strong> {result}</Form.Label>
+                    </Form.Group>
+            )}
           </Form>
         </Card.Body>
       </Card>
       <h2 className="text-center mb-4">Step-by-step guide</h2>
       <Card className="card-margin">
         <Card.Body>
-        <p>Consider a polynomial <i>P(x)</i>. To find its derivative <i>P'(x)</i>:</p>
+        <p>Consider a polynomial <i>P(x) = ax<sup>n</sup> + bx<sup>m</sup> + cx<sup>p</sup> + d</i>. To find its derivative <i>P'(x)</i>:</p>
 <ul>
   <li>Apply the power rule to each term: <i>d/dx [x<sup>n</sup>] = n x<sup>n-1</sup></i></li>
   <li>For the first term, <i>ax<sup>n</sup></i>: derivative is <i>nax<sup>n-1</sup></i></li>
@@ -105,21 +159,7 @@ export default function Derivative() {
       </div>
       </div>
       </div>
-      
-        
-      {/* //     <h2 className="text-center mb-4">Profile</h2>
-      //     {error && <Alert variant="danger">{error}</Alert>}
-      //     <strong>Email:</strong> {user.email}
-      //     <Link to="/update-profile" className="btn btn-primary w-100 mt-3">
-      //       Update Profile
-      //     </Link>
-        
-      
-      // <div className="w-100 text-center mt-2">
-      //   <Button variant="link" onClick={handleLogout}>
-      //     Log Out
-      //   </Button>
-      // </div> */}
+      <Footer />
     </>
   )
 }
