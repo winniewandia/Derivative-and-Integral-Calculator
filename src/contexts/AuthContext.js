@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react"
-import { auth, db } from "../firebase"
-import { collection, query, getDocs } from "firebase/firestore"
+import { auth } from "../firebase"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, onAuthStateChanged, updateEmail, updatePassword } from "firebase/auth"
 
 const AuthenticationContext = React.createContext()
 
@@ -11,53 +11,34 @@ export function useAuthentication() {
 export function AuthenticationProvider({ children }) {
   const [user, setUser] = useState()
   const [loading, setLoading] = useState(true)
-  const [records, setRecords] = useState([])
 
   function signup(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password)
+    return createUserWithEmailAndPassword(auth, email, password)
   }
 
   function login(email, password) {
-    return auth.signInWithEmailAndPassword(email, password)
+    return signInWithEmailAndPassword(auth, email, password)
   }
 
   function logout() {
-    return auth.signOut()
+    return signOut(auth)
   }
 
   function resetPassword(email) {
-    return auth.sendPasswordResetEmail(email)
+    return sendPasswordResetEmail(auth, email)
   }
 
-  function updateEmail(email) {
-    return user.updateEmail(email)
+  function updateEmailFunc(email) {
+    return updateEmail(user, email)
   }
 
-  function updatePassword(password) {
-    return user.updatePassword(password)
-  }
-
-  const getData = async () => {
-    const q = query(collection(db, "calculator"));
-    var records = [];
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      const record = {
-        uid: doc.id,
-        polynomial: doc.get("polynomial"),
-        variable: doc.get("variable"),
-
-      };
-      records.push(record);
-    })
-    setRecords(records);
+  function updatePasswordFunc(password) {
+    return updatePassword(user, password)
   }
 
   useEffect(() => {
-    getData();
-    const userDetails = auth.onAuthStateChanged(user => {
-      setUser(user)
+    const userDetails = onAuthStateChanged(auth, currentUser => {
+      setUser(currentUser)
       setLoading(false)
     })
 
@@ -70,10 +51,8 @@ export function AuthenticationProvider({ children }) {
     signup,
     logout,
     resetPassword,
-    updateEmail,
-    updatePassword,
-    getData,
-    records,
+    updateEmailFunc,
+    updatePasswordFunc,
   }
 
   return (

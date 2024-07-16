@@ -9,19 +9,16 @@ import { useAuthentication } from "../contexts/AuthContext"
 
 export default function Navigation() {
   const [hoveredLink, setHoveredLink] = useState('');
-  const [error, setError] = useState("")
   const { user, logout } = useAuthentication()
   const history = useHistory()
 
   async function handleLogout() {
-    setError("")
-
     try {
       await logout()
       history.push("/login")
     } catch {
-      setError("Failed to log out")
-  }}
+      console.log("Failed to log out")
+    }}
 
     return (
         <Navbar className="nav-margin-bottom nav-bg">

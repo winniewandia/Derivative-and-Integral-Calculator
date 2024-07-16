@@ -1,10 +1,9 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Card, Button, Alert, Form } from "react-bootstrap"
-import { useAuthentication } from "../contexts/AuthContext"
 import Navigation from "./Navigation"
 import '../styles/Derivative.css'
 import Footer from "./Footer"
-import { collection, setDoc, doc } from "firebase/firestore"
+import { collection, setDoc, doc, query, where, getDocs } from "firebase/firestore"
 import { db, auth } from "../firebase"
 
 export default function Integral() {
@@ -12,7 +11,22 @@ export default function Integral() {
   const [polynomial, setPolynomial] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("")
-  const { records } = useAuthentication();
+  const [records, setRecords] = useState(null);
+
+  const getData = async () => {
+    const q = query(collection(db, "calculator"), where("integral", "==", true));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const record = {
+        uid: doc.id,
+        polynomial: doc.get("polynomial"),
+        variable: doc.get("variable"),
+
+      };
+      setRecords([...records, record]);
+    })
+  }
 
   async function handleSubmit(){
     
@@ -20,7 +34,7 @@ export default function Integral() {
       uid: auth.currentUser.uid,
       variable: variable,
       polynomial: polynomial,
-      integral: result,
+      integral: true,
     };
     await setDoc(doc(collection(db, 'calculator')), fieldsTosave)
   };
@@ -55,7 +69,7 @@ export default function Integral() {
         const newExponent = exponent + 1;
         const newCoefficient = coefficient / newExponent;
   
-        const newCoefficientStr = newCoefficient === 1 ? '' : newCoefficient.toString();
+        const newCoefficientStr = newCoefficient === 1 ? '' : newCoefficient.toFixed(3);
         const newExponentStr = newExponent === 1 ? variable : `${variable}^${newExponent}`;
   
         return `${newCoefficientStr}${newExponentStr}`;
@@ -70,6 +84,10 @@ export default function Integral() {
   
     return integralTerms.join(' + ').replace(/\+\s*-/g, '- ').replace(/\s+/g, '') + ' + C';
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <>
@@ -127,7 +145,6 @@ export default function Integral() {
             className="btn mt-3 w-100"
             type="submit"
             style={{backgroundColor: '#99F49E', border: '#99F49E', color: 'black'}}
-            // onClick={handleSubmit}
             >
               Integrate
             </Button>
@@ -176,12 +193,6 @@ export default function Integral() {
           <Card.Body>
           <p><strong>Example 3:</strong> Find the integral of the polynomial <i>2x<sup>4</sup> + 3x<sup>3</sup> + 4x<sup>2</sup> + 5x + 6</i>.</p>
 <p><strong>Ans:</strong><i> ∫(2x<sup>4</sup> + 3x<sup>3</sup> + 4x<sup>2</sup> + 5x + 6) dx = 0.4x<sup>5</sup> + 0.75x<sup>4</sup> + 1.3333x<sup>3</sup> + 2.5x<sup>2</sup> + 6x + C</i></p>
-
-
-
-
-
-
           </Card.Body>
         </Card>
       </div>

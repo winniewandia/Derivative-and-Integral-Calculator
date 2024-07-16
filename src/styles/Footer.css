@@ -1,5 +1,20 @@
-.App-footer {
-    text-align: center;
-    font-style: italic;
-    font-size: larger;
+footer {
+  background-color: #f8f9fa;
+  text-align: center;
+  padding: 20px 0;
+  }
+  
+  footer-links {
+  list-style: none;
+  padding: 0;
+  }
+  
+  footer-links li {
+  display: inline;
+  margin-right: 20px;
+  }
+  
+  footer-links a {
+  text-decoration: none;
+  color: #007bff;
   }

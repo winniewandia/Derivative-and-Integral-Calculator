@@ -1,19 +1,37 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Card, Button, Alert, Form } from "react-bootstrap"
-import { useAuthentication } from "../contexts/AuthContext"
-import { useHistory } from "react-router-dom"
 import Navigation from "./Navigation"
 import '../styles/Derivative.css'
 import Footer from "./Footer"
 import { collection, setDoc, doc } from "firebase/firestore"
 import { db, auth } from "../firebase"
+import { query, getDocs, where } from "firebase/firestore"
+
 
 export default function Derivative() {
   const [variable, setVariable] = useState("");
   const [polynomial, setPolynomial] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("")
-  const { records } = useAuthentication();
+  const [records, setRecords] = useState([]);
+
+  const getData = async () => {
+    const q = query(collection(db, "calculator"), where("derivative", "==", true));
+    // const q = query(collection(db, "calculator"));
+    var records = [];
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const record = {
+        uid: doc.id,
+        polynomial: doc.get("polynomial"),
+        variable: doc.get("variable"),
+
+      };
+      records.push(record);
+    })
+    setRecords(records);
+  }
 
   async function handleSubmit(){
     
@@ -21,6 +39,7 @@ export default function Derivative() {
       uid: auth.currentUser.uid,
       variable: variable,
       polynomial: polynomial,
+      derivative: true,
     };
     await setDoc(doc(collection(db, 'calculator')), fieldsTosave)
   };
@@ -76,7 +95,9 @@ export default function Derivative() {
     return derivativeTerms.join(' + ').replace(/\+\s*-/g, '- ').replace(/\s+/g, '');
   };
   
-  
+  useEffect(() => {
+    getData();
+  }, []);
   
   
 
