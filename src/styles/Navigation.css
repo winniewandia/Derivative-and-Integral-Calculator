@@ -1,3 +1,15 @@
+@media (max-width: 768px) {
+    .nav-link.nav-font, .nav-link.nav-email {
+      font-size: 14px; /* Reduced font size for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-link.nav-email {
+        margin-top: 0px;
+    }
+}
+
 .active-tab {
     color: #99F49E;
 }

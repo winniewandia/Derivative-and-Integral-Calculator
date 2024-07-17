@@ -95,7 +95,7 @@ export default function Integral() {
       <div
       className="d-flex justify-content-center container-bg w-100"
     >
-      <div className="w-100 d-flex flex-row align-items-start">
+      <div className="container">
         <div className="d-flex flex-column card-flex-aside card-margin">
       <h2 className="text-center mb-4">History</h2>
       {records ? (
