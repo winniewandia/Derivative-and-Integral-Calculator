@@ -11,10 +11,12 @@ export default function Integral() {
   const [polynomial, setPolynomial] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("")
-  const [records, setRecords] = useState(null);
+  const [records, setRecords] = useState([]);
 
   const getData = async () => {
     const q = query(collection(db, "calculator"), where("integral", "==", true));
+    // const q = query(collection(db, "calculator"));
+    var records = [];
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach((doc) => {
@@ -24,8 +26,9 @@ export default function Integral() {
         variable: doc.get("variable"),
 
       };
-      setRecords([...records, record]);
+      records.push(record);
     })
+    setRecords(records);
   }
 
   async function handleSubmit(){
@@ -84,6 +87,7 @@ export default function Integral() {
   
     return integralTerms.join(' + ').replace(/\+\s*-/g, '- ').replace(/\s+/g, '') + ' + C';
   };
+  // getData();
 
   useEffect(() => {
     getData();
